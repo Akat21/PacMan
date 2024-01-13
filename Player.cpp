@@ -36,7 +36,7 @@ Player::~Player(){
 //Getters and Setters
 
 //Functions
-void Player::updateDirection(){
+void Player::updateDirection(sf::RenderWindow* target){
     /*
         @ return void
 
@@ -132,10 +132,10 @@ void Player::updateCollision(std::vector<std::vector<sf::RectangleShape>> map){
 }
 
 //Functions
-void Player::update(sf::RenderTarget* target){
+void Player::update(sf::RenderWindow* target){
 
     //Update position of the player
-    this->updateDirection();
+    this->updateDirection(target);
     this->updateMovement();
 }
 

@@ -164,25 +164,29 @@ void Game::update(){
         Updates the game logic
     */
 
-    if(this->endGame == true){
-        this->window->close();
+   if(this->menu.getStartGame() == false){
+        this->menu.update(this->window); //Update menu
+    } else {
+        if(this->endGame == true){
+            this->window->close();
+        }
+
+        this->pollEvents();
+        this->updateMousePositions();
+
+        this->player.update(this->window);
+        this->player.updateCollision(this->map.getCollisionTiles());
+
+        for(auto &c : this->coins){
+            c.update();
+        }
+        
+        this->updateCollision();
+
+        this->updateEnemies();
+
+        this->UpdateGUI();
     }
-
-    this->pollEvents();
-    this->updateMousePositions();
-
-    this->player.update(this->window);
-    this->player.updateCollision(this->map.getCollisionTiles());
-
-    for(auto &c : this->coins){
-        c.update();
-    }
-    
-    this->updateCollision();
-
-    this->updateEnemies();
-
-    this->UpdateGUI();
 
 }
 
@@ -223,12 +227,21 @@ void Game::render(){
    
     this->window->clear(sf::Color::Black); //Clear old frame
 
-    //Render game objects
-    this->map.render(this->window);
-    this->player.render(this->window);
-    this->renderEnemies();
+    //Render menu and game 
+    if (this->menu.getStartGame() == false){
+        //Render menu 
+        this->menu.render(this->window);
+    }
+    else if (this->menu.getStartGame() == true){
+        //Render game objects
+        this->map.render(this->window);
+        this->player.render(this->window);
+        this->renderEnemies();
 
-    //Render GUI
-    this->renderGUI(this->window);
+        //Render GUI
+        this->renderGUI(this->window);
+    }
+
     this->window->display(); //Display new frame
+
 }

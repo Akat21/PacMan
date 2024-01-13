@@ -10,6 +10,7 @@
 #include <SFML/Window.hpp>
 #include <SFML/System.hpp>
 
+#include "Menu.h"
 #include "Player.h"
 #include "Map.h"
 #include "Enemy.h"
@@ -26,6 +27,9 @@ class Game{
         sf::VideoMode videoMode;
 
         sf::Event ev;
+
+        //Menu
+        Menu menu;
 
         //Map
         Map map;
