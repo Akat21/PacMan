@@ -1,0 +1,44 @@
+#ifndef PLAYER_H
+#define PLAYER_H
+
+#include <SFML/Graphics.hpp>
+#include <SFML/Window.hpp>
+#include <SFML/System.hpp>
+
+enum Direction {
+    LEFT,
+    RIGHT,
+    UP, 
+    DOWN
+};
+
+class Player{
+    private:
+        //Player Shape
+        sf::RectangleShape shape;
+
+        //Movement
+        Direction dir;
+        sf::Vector2f movementSpeed;
+
+        //Private Functions
+        void initVariables();
+        void initShape();
+
+    public:
+
+        //Constructors and Destructors
+        Player(float x = 0.f, float y = 0.f);
+        virtual ~Player();
+
+        //Getters and Setters
+
+        //Functions
+        void update(sf::RenderTarget* target);
+        void updateDirection();
+        void updateMovement();
+        void updateCollision(std::vector<std::vector<sf::RectangleShape>> collisionTiles);
+        void render(sf::RenderTarget* target);
+};
+
+#endif

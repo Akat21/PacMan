@@ -1,39 +1,22 @@
-#include <iostream>
+#include "Game.h"
 
-#include <SFML/Graphics.hpp>
-
+//"C:\\SFML-2.6.1\\include"
 int main(){
-    //Window Creation
-    sf::RenderWindow window(sf::VideoMode(640, 480), "Pac Man", sf::Style::Titlebar | sf::Style::Close);
-    sf::Event ev;
+
+    //Init srand
+    std::srand(static_cast<unsigned>(time(NULL)));
+
+    //Init Game Engine
+    Game game;
 
     //Game Loop
-    while(window.isOpen()){
-        
-        //Event Polling
-        while(window.pollEvent(ev)){
-            switch(ev.type){
-
-                //Close Event by clicking the X
-                case sf::Event::Closed:
-                    window.close();
-                    break;
-
-                //Close Event by pressing Escape
-                case sf::Event::KeyPressed:
-                    if(ev.key.code == sf::Keyboard::Escape){
-                        window.close();
-                    }
-                    break;
-            }
-        }
+    while(game.isRunning()){
 
         //Update
+        game.update();
 
         //Render
-        window.clear(sf::Color::Black); //Clear old frame
-
-        window.display(); //Render new frame
+        game.render();
     }
 
     //End of Application
