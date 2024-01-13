@@ -16,6 +16,10 @@ std::vector<std::vector<sf::RectangleShape>> Map::getCollisionTiles() const{
     return this->collisionTiles;
 }
 
+std::vector<std::vector<sf::RectangleShape>> Map::getCoinsTiles() const{
+    return this->coinsTiles;
+}
+
 //Private Functions
 void Map::initVariables(){
     //Clear maps with every render
@@ -77,6 +81,7 @@ void Map::createTiles(){
     //Create tilesRow and collisionRow
     std::vector<sf::RectangleShape> tilesRow;
     std::vector<sf::RectangleShape> collisionRow;
+    std::vector<sf::RectangleShape> coinsRow;
 
     //Fill tilesMap with tiles based on map
     for(size_t y = 0; y < this->map.size(); y++){
@@ -87,6 +92,11 @@ void Map::createTiles(){
                 tile.setFillColor(sf::Color::Green); //Wall
                 tile.setPosition(x * 20.f, y * 20.f);
                 collisionRow.push_back(tile);
+            }
+            else if(this->map[y][x] == 67){
+                tile.setFillColor(sf::Color::Black);
+                tile.setPosition(x * 20.f, y * 20.f);
+                coinsRow.push_back(tile);
             }
             else{
                 tile.setFillColor(sf::Color::Black); //Floor
@@ -99,8 +109,10 @@ void Map::createTiles(){
         tilesRow.clear();
 
         //Push collisionRow to collisionTiles then clear collisionRow
-        this->collisionTiles.push_back(collisionRow);
+        this->collisionTiles.push_back(collisionRow);   
+        this->coinsTiles.push_back(coinsRow);
         collisionRow.clear();
+        coinsRow.clear();
     }
 }
 

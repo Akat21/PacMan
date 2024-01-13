@@ -3,6 +3,8 @@
 
 #include <iostream>
 #include <ctime>
+#include <string>
+#include <sstream>
 
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
@@ -11,6 +13,7 @@
 #include "Player.h"
 #include "Map.h"
 #include "Enemy.h"
+#include "Coins.h"
 
 /*
     Game engine class
@@ -26,6 +29,7 @@ class Game{
 
         //Map
         Map map;
+        std::vector<std::vector<sf::RectangleShape>> coinsTiles;
 
         //Player
         Player player;
@@ -33,9 +37,14 @@ class Game{
         //Enemies
         std::vector<Enemy> enemies;
 
+        //Coins
+        std::vector<Coins> coins;
+        int points;
+        sf::Font font;
+        sf::Text text;
+
         //Game logic
         bool endGame;
-        int points;
         int maxEnemies;
 
         //Mouse positions
@@ -44,6 +53,8 @@ class Game{
 
         //Private Functions
         void initVariables();
+        void initFonts();
+        void initText();
         void initWindow();
 
     //Constructors and Destructors
@@ -60,9 +71,11 @@ class Game{
     void updateEnemies();
     void updateCollision();
     void updateMousePositions();
+    void UpdateGUI();
     void update();
 
     void renderEnemies();
+    void renderGUI(sf::RenderTarget* target);
     void render();
 
 };

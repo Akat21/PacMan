@@ -5,6 +5,8 @@
 Game::Game(){
     this->initVariables();
     this->initWindow();
+    this->initFonts();
+    this->initText();
 }
 
 Game::~Game(){
@@ -20,6 +22,7 @@ void Game::initVariables(){
     this->endGame = false;
     this->points = 0;
     this->maxEnemies = 5;
+    this->coinsTiles = static_cast<std::vector<std::vector<sf::RectangleShape>>>(this->map.getCoinsTiles());
 }
 
 void Game::initWindow(){
@@ -32,6 +35,20 @@ void Game::initWindow(){
 
     //Set FPS limit
     this->window->setFramerateLimit(60);
+}
+
+void Game::initFonts(){
+    if(!this->font.loadFromFile("Fonts/advanced_pixel-7.ttf")){
+        std::cout << "ERROR::GAME::INITFONTS::Failed to load font" << std::endl;
+    }
+}
+
+void Game::initText(){
+    this->text.setFont(this->font);
+    this->text.setCharacterSize(50);
+    this->text.setPosition(40.f, 400.f);
+    this->text.setFillColor(sf::Color::White);
+    this->text.setString("Points: 0");
 }
 
 //Getters and Setters
@@ -89,6 +106,14 @@ void Game::updateEnemies(){
         this->enemies.push_back(Enemy());
     }
 
+    //Coins spawning
+    for(size_t i = 0; i < this->coinsTiles.size(); i++){
+        for(size_t j = 0; j < this->coinsTiles[i].size(); j++){
+            this->coins.push_back(Coins(this->coinsTiles[i][j].getPosition().x, this->coinsTiles[i][j].getPosition().y));
+            coinsTiles[i].erase(coinsTiles[i].begin() + j);
+        }
+    }
+
     //Update all enemies
     for (auto &e : this->enemies){
         e.update();
@@ -108,7 +133,28 @@ void Game::updateCollision(){
             this->endGame = true;
         }
     }
+
+    for (auto &c : this->coins){
+        if (this->player.getShape().getGlobalBounds().intersects(c.getShape().getGlobalBounds())){
+            this->points += 10;
+            c.setCollected(true);
+        }
+    }
     
+}
+
+void Game::UpdateGUI(){
+    /*
+        @return void
+
+        Updates the GUI
+    */
+
+    std::stringstream ss;
+
+    ss << "Points: " << this->points;
+
+    this->text.setString(ss.str());
 }
 
 void Game::update(){
@@ -127,10 +173,16 @@ void Game::update(){
 
     this->player.update(this->window);
     this->player.updateCollision(this->map.getCollisionTiles());
+
+    for(auto &c : this->coins){
+        c.update();
+    }
     
     this->updateCollision();
-    
+
     this->updateEnemies();
+
+    this->UpdateGUI();
 
 }
 
@@ -145,6 +197,21 @@ void Game::renderEnemies(){
     for (auto e : this->enemies){
         e.render(this->window);
     }
+
+    //Rendering all the coins
+    for(auto c : this->coins){
+        c.render(this->window);
+    }
+}
+
+void Game::renderGUI(sf::RenderTarget* target){
+    /*
+        @return void
+
+        Renders the GUI
+    */
+
+    target->draw(this->text);
 }
 
 void Game::render(){
@@ -161,5 +228,7 @@ void Game::render(){
     this->player.render(this->window);
     this->renderEnemies();
 
+    //Render GUI
+    this->renderGUI(this->window);
     this->window->display(); //Display new frame
 }
