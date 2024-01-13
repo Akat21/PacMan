@@ -1,6 +1,8 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
+#include <iostream>
+
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
 #include <SFML/System.hpp>
@@ -9,7 +11,8 @@ enum Direction {
     LEFT,
     RIGHT,
     UP, 
-    DOWN
+    DOWN,
+    NONE
 };
 
 class Player{
@@ -18,7 +21,7 @@ class Player{
         sf::RectangleShape shape;
 
         //Movement
-        Direction dir;
+        std::vector<Direction> dir;
         sf::Vector2f movementSpeed;
 
         //Private Functions
@@ -32,6 +35,7 @@ class Player{
         virtual ~Player();
 
         //Getters and Setters
+        sf::RectangleShape getShape() const;
 
         //Functions
         void update(sf::RenderTarget* target);

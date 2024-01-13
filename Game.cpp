@@ -25,7 +25,7 @@ void Game::initVariables(){
 void Game::initWindow(){
     //Set window resolution
     this->videoMode.width = 800;
-    this->videoMode.height = 600;
+    this->videoMode.height = 800;
 
     //Create window
     this->window = new sf::RenderWindow(this->videoMode, "Pac Man", sf::Style::Titlebar | sf::Style::Close);
@@ -88,6 +88,12 @@ void Game::updateEnemies(){
     if(this->enemies.size() < this->maxEnemies){
         this->enemies.push_back(Enemy());
     }
+
+    //Update all enemies
+    for (auto &e : this->enemies){
+        e.update();
+        e.updateCollision(this->map.getCollisionTiles());
+    }
 }
 
 void Game::updateCollision(){
@@ -97,6 +103,11 @@ void Game::updateCollision(){
         Checks for collision between the player and the enemies
     */
 
+    for (auto &e : this->enemies){
+        if (this->player.getShape().getGlobalBounds().intersects(e.getShape().getGlobalBounds())){
+            this->endGame = true;
+        }
+    }
     
 }
 
@@ -107,14 +118,18 @@ void Game::update(){
         Updates the game logic
     */
 
+    if(this->endGame == true){
+        this->window->close();
+    }
+
     this->pollEvents();
     this->updateMousePositions();
 
     this->player.update(this->window);
     this->player.updateCollision(this->map.getCollisionTiles());
-
-    // this->updateCollision();
-
+    
+    this->updateCollision();
+    
     this->updateEnemies();
 
 }

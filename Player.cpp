@@ -2,13 +2,18 @@
 
 //Private Functions
 void Player::initVariables(){
-    
+    for(size_t i = 0; i < 2; i++) this->dir.push_back(NONE);
 }
 
 void Player::initShape(){
     this->shape.setFillColor(sf::Color::Blue);
     this->shape.setSize(sf::Vector2f(20.f, 20.f));
     this->shape.setPosition(20.f, 20.f);
+}
+
+//Getters and Setters
+sf::RectangleShape Player::getShape() const{
+    return this->shape;
 }
 
 //Constructors and Destructors
@@ -40,18 +45,22 @@ void Player::updateDirection(){
 
     //X axis direction set
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)){
-        this->dir = LEFT;
+        this->dir[0] = static_cast<Direction>(this->dir[1]);
+        this->dir[1] = LEFT;
     }
     else if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)){
-        this->dir = RIGHT;
+        this->dir[0] = static_cast<Direction>(this->dir[1]);
+        this->dir[1] = RIGHT;
     }
 
     //Y axis direction set
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)){
-        this->dir = UP;
+        this->dir[0] = static_cast<Direction>(this->dir[1]);
+        this->dir[1] = UP;
     }
     else if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)){
-        this->dir = DOWN;
+        this->dir[0] = static_cast<Direction>(this->dir[1]);
+        this->dir[1] = DOWN;
     }
 }
 
@@ -61,8 +70,7 @@ void Player::updateMovement(){
 
         Updates movement of the player based on the direction
     */
-
-    switch (this->dir){
+    switch (this->dir[1]){
         case LEFT:
             this->movementSpeed.x = -5.f; //Left
             this->movementSpeed.y = 0.f;
@@ -98,18 +106,22 @@ void Player::updateCollision(std::vector<std::vector<sf::RectangleShape>> map){
         for (auto block : row){
             //Check for collision
             if (this->shape.getGlobalBounds().intersects(block.getGlobalBounds())){
-                switch(this->dir){
+                switch (this->dir[1]){
                     case LEFT:
                         this->shape.move(5.f, 0.f);
+                        this->dir[1] = static_cast<Direction>(this->dir[0]);
                         break;
                     case RIGHT:
                         this->shape.move(-5.f, 0.f);
+                        this->dir[1] = static_cast<Direction>(this->dir[0]);
                         break;
                     case UP:
                         this->shape.move(0.f, 5.f);
+                        this->dir[1] = static_cast<Direction>(this->dir[0]);
                         break;
                     case DOWN:
                         this->shape.move(0.f, -5.f);
+                        this->dir[1] = static_cast<Direction>(this->dir[0]);
                         break;
                     default:
                         break;
