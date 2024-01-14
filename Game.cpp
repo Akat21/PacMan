@@ -19,6 +19,7 @@ void Game::initVariables(){
     this->window = nullptr;
 
     //Game logic
+    this->pause = false;
     this->endGame = false;
     this->points = 0;
     this->maxEnemies = 5;
@@ -33,6 +34,11 @@ void Game::initWindow(){
     //Create window
     this->window = new sf::RenderWindow(this->videoMode, "Pac Man", sf::Style::Titlebar | sf::Style::Close);
 
+    //Pause box
+    this->helpBox.setSize(sf::Vector2f(400.f, 400.f));
+    this->helpBox.setFillColor(sf::Color(0, 0, 0, 150));
+    this->helpBox.setPosition(200.f, 210.f);
+
     //Set FPS limit
     this->window->setFramerateLimit(60);
 }
@@ -44,11 +50,19 @@ void Game::initFonts(){
 }
 
 void Game::initText(){
-    this->text.setFont(this->font);
-    this->text.setCharacterSize(50);
-    this->text.setPosition(40.f, 400.f);
-    this->text.setFillColor(sf::Color::White);
-    this->text.setString("Points: 0");
+    //Init score text
+    this->score.setFont(this->font);
+    this->score.setCharacterSize(50);
+    this->score.setPosition(40.f, 400.f);
+    this->score.setFillColor(sf::Color::White);
+    this->score.setString("Points: 0");
+
+    //Init help text
+    this->helpText.setFont(this->font);
+    this->helpText.setCharacterSize(60);
+    this->helpText.setPosition(205.f, 180.f);
+    this->helpText.setFillColor(sf::Color::White);
+    this->helpText.setString("Press F1 to unpause\n\nCollect Coins to \nget points\nAvoid the ghosts\n\nPress ESC to exit");
 }
 
 //Getters and Setters
@@ -78,6 +92,8 @@ void Game::pollEvents(){
             case sf::Event::KeyPressed:
                 if(this->ev.key.code == sf::Keyboard::Escape)
                     this->window->close();
+                if(this->ev.key.code == sf::Keyboard::F1)
+                    this->pause = !this->pause;
                 break;
         }
     }
@@ -154,7 +170,25 @@ void Game::UpdateGUI(){
 
     ss << "Points: " << this->points;
 
-    this->text.setString(ss.str());
+    this->score.setString(ss.str());
+}
+
+void Game::updateDifficulty(){
+    /*
+        @return void
+
+        Updates the difficulty of the game
+    */
+
+    if (this->menu.getDifficultyLevel() == EASY){
+        this->maxEnemies = 5;
+    }
+    else if (this->menu.getDifficultyLevel() == MEDIUM){
+        this->maxEnemies = 10;
+    }
+    else if (this->menu.getDifficultyLevel() == HARD){
+        this->maxEnemies = 15;
+    }
 }
 
 void Game::update(){
@@ -167,25 +201,32 @@ void Game::update(){
    if(this->menu.getStartGame() == false){
         this->menu.update(this->window); //Update menu
     } else {
-        if(this->endGame == true){
-            this->window->close();
-        }
-
+        //Poll events
         this->pollEvents();
-        this->updateMousePositions();
 
-        this->player.update(this->window);
-        this->player.updateCollision(this->map.getCollisionTiles());
+        //Game update
+        if (this->pause == false){
+            if(this->endGame == true){
+                this->window->close();
+            }
 
-        for(auto &c : this->coins){
-            c.update();
+            this->updateMousePositions();
+
+            this->updateDifficulty();
+
+            this->player.update(this->window);
+            this->player.updateCollision(this->map.getCollisionTiles());
+
+            for(auto &c : this->coins){
+                c.update();
+            }
+            
+            this->updateCollision();
+
+            this->updateEnemies();
+
+            this->UpdateGUI();
         }
-        
-        this->updateCollision();
-
-        this->updateEnemies();
-
-        this->UpdateGUI();
     }
 
 }
@@ -215,7 +256,10 @@ void Game::renderGUI(sf::RenderTarget* target){
         Renders the GUI
     */
 
-    target->draw(this->text);
+    target->draw(this->score);
+    if (this->pause == true){
+        target->draw(this->helpText);
+    }
 }
 
 void Game::render(){
@@ -237,6 +281,9 @@ void Game::render(){
         this->map.render(this->window);
         this->player.render(this->window);
         this->renderEnemies();
+
+        //Render pause
+        if (this->pause == true) this->window->draw(this->helpBox);
 
         //Render GUI
         this->renderGUI(this->window);

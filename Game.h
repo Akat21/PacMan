@@ -45,7 +45,11 @@ class Game{
         std::vector<Coins> coins;
         int points;
         sf::Font font;
-        sf::Text text;
+        sf::Text score;
+
+        //Pause
+        sf::Text helpText;
+        sf::RectangleShape helpBox;
 
         //Game logic
         bool endGame;
@@ -54,6 +58,9 @@ class Game{
         //Mouse positions
         sf::Vector2i mousePosWindow;
         sf::Vector2f mousePosView;
+
+        //Pause
+        bool pause;
 
         //Private Functions
         void initVariables();
@@ -76,6 +83,7 @@ class Game{
     void updateCollision();
     void updateMousePositions();
     void UpdateGUI();
+    void updateDifficulty();
     void update();
 
     void renderEnemies();
