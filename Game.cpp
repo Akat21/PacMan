@@ -22,6 +22,7 @@ void Game::initVariables(){
     //Game logic
     this->pause = false;
     this->endGame = false;
+    this->load = false;
     this->points = 0;
     this->maxEnemies = 5;
     this->coinsTiles = static_cast<std::vector<std::vector<sf::RectangleShape>>>(this->map.getCoinsTiles());
@@ -291,16 +292,15 @@ void Game::update(){
 
         Updates the game logic
     */
-   bool load = false;
    if(this->menu.getStartGame() == false){
         this->menu.update(this->window); //Update menu
-        load = false;
+        this->load = false;
     } else {
  
         //Load game
-        if (load == false){
+        if (this->load == false){
             if (this->menu.getLoadGame()) this->loadGame();
-            load = true;
+            this->load = true;
         }
         //Poll events
         this->pollEvents();

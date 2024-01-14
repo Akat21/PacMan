@@ -54,6 +54,7 @@ class Game{
         //Game logic
         bool endGame;
         int maxEnemies;
+        bool load;
 
         //Textures
         std::map<std::string, sf::Texture> textures;
