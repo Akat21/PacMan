@@ -2,6 +2,7 @@
 #define Menu_H
 
 #include <iostream>
+#include <fstream>
 
 #include <SFML/Graphics.hpp>
 
@@ -26,20 +27,26 @@ class Menu{
 
         //Game logic
         bool startGame;
+
         bool difficultyMenu;
         int choice;
         int difficultyChoice;
         difficulty diff;
 
+        bool isFile;
+        bool loadGame;
+
         //Private Functions
         void initVariables();
         void initFont();
         void initText();
+        void checkFile();
 
 
     public:
         //Setters and Getters
         bool getStartGame() const;
+        bool getLoadGame() const;
         difficulty getDifficultyLevel() const;
 
         //Constructors and Destructors

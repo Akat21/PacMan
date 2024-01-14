@@ -16,6 +16,11 @@ sf::RectangleShape Player::getShape() const{
     return this->shape;
 }
 
+
+void Player::setShape(sf::RectangleShape shape){
+    this->shape = shape;
+}
+
 //Constructors and Destructors
 Player::Player(float x, float y){
     
@@ -32,8 +37,6 @@ Player::Player(float x, float y){
 Player::~Player(){
 
 }
-
-//Getters and Setters
 
 //Functions
 void Player::updateDirection(sf::RenderWindow* target){

@@ -7,6 +7,7 @@ Game::Game(){
     this->initWindow();
     this->initFonts();
     this->initText();
+    this->initTextures();
 }
 
 Game::~Game(){
@@ -24,6 +25,7 @@ void Game::initVariables(){
     this->points = 0;
     this->maxEnemies = 5;
     this->coinsTiles = static_cast<std::vector<std::vector<sf::RectangleShape>>>(this->map.getCoinsTiles());
+
 }
 
 void Game::initWindow(){
@@ -65,6 +67,19 @@ void Game::initText(){
     this->helpText.setString("Press F1 to unpause\n\nCollect Coins to \nget points\nAvoid the ghosts\n\nPress ESC to exit");
 }
 
+void Game::initTextures(){
+    //Init textures
+    this->textures["PLAYER_SHEET"].loadFromFile("Textures/rosekane_55.png");
+    this->textures["ENEMY_SHEET"].loadFromFile("Textures/rosekane_22.png");
+    this->textures["MAP_SHEET"].loadFromFile("Textures/rosekane_196.png");
+    this->textures["COINS_SHEET"].loadFromFile("Textures/rosekane_0.png");
+
+    //Init player
+    sf::RectangleShape playerShape = this->player.getShape();
+    playerShape.setTexture(&this->textures["PLAYER_SHEET"]);
+    this->player.setShape(playerShape);
+}
+
 //Getters and Setters
 const bool Game::isRunning() const{
     return this->window->isOpen();
@@ -90,13 +105,45 @@ void Game::pollEvents(){
 
             //Close window by pressing ESC
             case sf::Event::KeyPressed:
-                if(this->ev.key.code == sf::Keyboard::Escape)
+                if(this->ev.key.code == sf::Keyboard::Escape){
                     this->window->close();
+                    this->saveGame();
+                }
                 if(this->ev.key.code == sf::Keyboard::F1)
                     this->pause = !this->pause;
                 break;
         }
     }
+}
+
+void Game::saveGame(){
+    /*
+        @return void
+
+        Saves the game
+    */
+
+    std::ofstream ofs("save.txt", std::ios::trunc);
+
+    ofs << this->points << std::endl;
+
+    ofs.close();
+}
+
+void Game::loadGame(){
+    /*
+        @return void
+
+        Loads the game
+    */
+
+    std::ifstream ifs("save.txt");
+
+    if(ifs.is_open()){
+        ifs >> this->points;
+    }
+
+    ifs.close();
 }
 
 void Game::updateMousePositions(){
@@ -197,10 +244,17 @@ void Game::update(){
 
         Updates the game logic
     */
-
+   bool load = false;
    if(this->menu.getStartGame() == false){
         this->menu.update(this->window); //Update menu
+        load = false;
     } else {
+ 
+        //Load game
+        if (load == false){
+            if (this->menu.getLoadGame()) this->loadGame();
+            load = true;
+        }
         //Poll events
         this->pollEvents();
 

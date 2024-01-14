@@ -55,6 +55,9 @@ class Game{
         bool endGame;
         int maxEnemies;
 
+        //Textures
+        std::map<std::string, sf::Texture> textures;
+
         //Mouse positions
         sf::Vector2i mousePosWindow;
         sf::Vector2f mousePosView;
@@ -67,6 +70,7 @@ class Game{
         void initFonts();
         void initText();
         void initWindow();
+        void initTextures();
 
     //Constructors and Destructors
     public:
@@ -78,6 +82,9 @@ class Game{
 
     //Functions
     void pollEvents();
+
+    void saveGame();
+    void loadGame();
 
     void updateEnemies();
     void updateCollision();

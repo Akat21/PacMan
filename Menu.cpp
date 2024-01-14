@@ -3,7 +3,9 @@
 //Private Functions
 void Menu::initVariables(){
     this->startGame = false;
+    this->loadGame = false;
     this->choice = 1;
+    this->isFile = false;
     this->difficultyChoice = 1;
     this->difficultyMenu = false;
     this->diff = EASY;
@@ -68,6 +70,13 @@ void Menu::initText(){
 
 }
 
+void Menu::checkFile(){
+    std::ifstream inFile;
+    if (std::ifstream inFile("save.txt"); inFile) {
+        this->isFile = true;
+    }
+}
+
 //Constructors and Destructors
 Menu::Menu(){
     this->initVariables();
@@ -84,12 +93,19 @@ bool Menu::getStartGame() const{
     return this->startGame;
 }
 
+bool Menu::getLoadGame() const{
+    return this->loadGame;
+}
+
 difficulty Menu::getDifficultyLevel() const{
     return this->diff;
 }
 
 //Functions
 void Menu::update(sf::RenderWindow* target){
+    this->checkFile();
+
+    //Event polling
     while(target->pollEvent(this->ev)){
         switch(this->ev.type){
             case sf::Event::KeyReleased:
@@ -141,6 +157,12 @@ void Menu::update(sf::RenderWindow* target){
                         if(this->choice == 1){
                             this->startGame = true;
                         }
+                        if(this->choice == 2){
+                            if(this->isFile == true){
+                                this->loadGame = true;
+                                this->startGame = true;
+                            }
+                        }
                         if(this->choice == 3){
                             this->difficultyMenu = true;
                         }
@@ -177,7 +199,7 @@ void Menu::update(sf::RenderWindow* target){
     //Menu
     if (this->choice == 1){
         this->startText.setFillColor(sf::Color::Red);
-        this->loadText.setFillColor(sf::Color::White);
+        if(this->isFile) this->loadText.setFillColor(sf::Color::White); else this->loadText.setFillColor(sf::Color(150, 150, 150));
         this->difficultyText.setFillColor(sf::Color::White);
         this->exitText.setFillColor(sf::Color::White);
     }
@@ -189,13 +211,13 @@ void Menu::update(sf::RenderWindow* target){
     }
     if (this->choice == 3){
         this->startText.setFillColor(sf::Color::White);
-        this->loadText.setFillColor(sf::Color::White);
+        if(this->isFile) this->loadText.setFillColor(sf::Color::White); else this->loadText.setFillColor(sf::Color(150, 150, 150));
         this->difficultyText.setFillColor(sf::Color::Red);
         this->exitText.setFillColor(sf::Color::White);
     }
     if  (this->choice == 4){
         this->startText.setFillColor(sf::Color::White);
-        this->loadText.setFillColor(sf::Color::White);
+        if(this->isFile) this->loadText.setFillColor(sf::Color::White); else this->loadText.setFillColor(sf::Color(150, 150, 150));
         this->difficultyText.setFillColor(sf::Color::White);
         this->exitText.setFillColor(sf::Color::Red);
     }

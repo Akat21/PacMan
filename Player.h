@@ -37,6 +37,7 @@ class Player{
 
         //Getters and Setters
         sf::RectangleShape getShape() const;
+        void setShape(sf::RectangleShape shape);
 
         //Functions
         void update(sf::RenderWindow* target);
