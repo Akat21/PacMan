@@ -57,6 +57,14 @@ sf::RectangleShape Enemy::getShape() const{
     return this->shape;
 }
 
+Direction Enemy::getDir() const{
+    return this->dir;
+}
+
+void Enemy::setShape(sf::RectangleShape shape){
+    this->shape = shape;
+}
+
 //Constructors and Destructors
 Enemy::Enemy(){
     this->initVariables();

@@ -17,6 +17,7 @@ class Map{
         std::vector<std::vector<sf::RectangleShape>> tilesMap;
         std::vector<std::vector<sf::RectangleShape>> collisionTiles;
         std::vector<std::vector<sf::RectangleShape>> coinsTiles;
+        std::map<std::string, sf::Texture> textures;
 
         //Private Functions
         void initVariables();
@@ -30,6 +31,7 @@ class Map{
         //Getters and Setters
         std::vector<std::vector<sf::RectangleShape>> getCollisionTiles() const;
         std::vector<std::vector<sf::RectangleShape>> getCoinsTiles() const;
+        void setCollisionTiles(std::vector<std::vector<sf::RectangleShape>> collisionTiles);
 
         //Functions
         void createTiles();

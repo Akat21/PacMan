@@ -40,6 +40,10 @@ void Coins::setCollected(bool collected){
     this->collected = collected;
 }
 
+void Coins::setShape(sf::RectangleShape shape){
+    this->shape = shape;
+}
+
 //Functions
 void Coins::update(){
     if (this->collected){

@@ -16,6 +16,9 @@ sf::RectangleShape Player::getShape() const{
     return this->shape;
 }
 
+std::vector<Direction> Player::getDir() const{
+    return this->dir;
+}
 
 void Player::setShape(sf::RectangleShape shape){
     this->shape = shape;

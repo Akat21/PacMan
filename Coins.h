@@ -20,6 +20,7 @@ class Coins{
         //Getters and Setters
         sf::RectangleShape getShape() const;
         void setCollected(bool collected);
+        void setShape(sf::RectangleShape shape);
         
         //Constructors and Destructors
         Coins(float x = 0.f, float y = 0.f);

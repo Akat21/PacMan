@@ -37,6 +37,7 @@ class Player{
 
         //Getters and Setters
         sf::RectangleShape getShape() const;
+        std::vector<Direction> getDir() const;
         void setShape(sf::RectangleShape shape);
 
         //Functions

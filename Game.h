@@ -88,6 +88,7 @@ class Game{
 
     void updateEnemies();
     void updateCollision();
+    void updateTextures();
     void updateMousePositions();
     void UpdateGUI();
     void updateDifficulty();

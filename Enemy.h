@@ -22,6 +22,8 @@ class Enemy{
     public:
         //Getters and Setters
         sf::RectangleShape getShape() const;
+        Direction getDir() const;
+        void setShape(sf::RectangleShape shape);
         
         //Constructors and Destructors
         Enemy();

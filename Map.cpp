@@ -20,6 +20,10 @@ std::vector<std::vector<sf::RectangleShape>> Map::getCoinsTiles() const{
     return this->coinsTiles;
 }
 
+void Map::setCollisionTiles(std::vector<std::vector<sf::RectangleShape>> collisionTiles){
+    this->collisionTiles = collisionTiles;
+}
+
 //Private Functions
 void Map::initVariables(){
     //Clear maps with every render
@@ -91,6 +95,9 @@ void Map::createTiles(){
             if(this->map[y][x] == 66){
                 tile.setFillColor(sf::Color::Green); //Wall
                 tile.setPosition(x * 20.f, y * 20.f);
+                this->textures["MAP_WALL"].loadFromFile("Textures/rosekane_196.png");
+
+                tile.setTexture(&this->textures["MAP_WALL"]);
                 collisionRow.push_back(tile);
             }
             else if(this->map[y][x] == 67){

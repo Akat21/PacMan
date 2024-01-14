@@ -69,15 +69,17 @@ void Game::initText(){
 
 void Game::initTextures(){
     //Init textures
-    this->textures["PLAYER_SHEET"].loadFromFile("Textures/rosekane_55.png");
-    this->textures["ENEMY_SHEET"].loadFromFile("Textures/rosekane_22.png");
-    this->textures["MAP_SHEET"].loadFromFile("Textures/rosekane_196.png");
-    this->textures["COINS_SHEET"].loadFromFile("Textures/rosekane_0.png");
+    this->textures["PLAYER_SHEET_LEFT"].loadFromFile("Textures/rosekane_55.png");
+    this->textures["PLAYER_SHEET_RIGHT"].loadFromFile("Textures/rosekane_71.png");
+    this->textures["PLAYER_SHEET_DOWN"].loadFromFile("Textures/rosekane_85.png");
+    this->textures["PLAYER_SHEET_UP"].loadFromFile("Textures/rosekane_103.png");
 
-    //Init player
-    sf::RectangleShape playerShape = this->player.getShape();
-    playerShape.setTexture(&this->textures["PLAYER_SHEET"]);
-    this->player.setShape(playerShape);
+    this->textures["ENEMY_SHEET_RIGHT"].loadFromFile("Textures/rosekane_22.png");
+    this->textures["ENEMY_SHEET_LEFT"].loadFromFile("Textures/rosekane_21.png");
+    this->textures["ENEMY_SHEET_DOWN"].loadFromFile("Textures/rosekane_23.png");
+    this->textures["ENEMY_SHEET_UP"].loadFromFile("Textures/rosekane_24.png");
+
+    this->textures["COINS_SHEET"].loadFromFile("Textures/rosekane_0.png");
 }
 
 //Getters and Setters
@@ -238,6 +240,51 @@ void Game::updateDifficulty(){
     }
 }
 
+void Game::updateTextures(){
+    /*
+        @return void
+
+        Updates the textures of the game objects
+    */
+
+    //Init player
+    sf::RectangleShape playerShape = this->player.getShape();
+    if (this->player.getDir()[1] == LEFT)
+        playerShape.setTexture(&this->textures["PLAYER_SHEET_LEFT"]);
+    else if (this->player.getDir()[1] == RIGHT)
+        playerShape.setTexture(&this->textures["PLAYER_SHEET_RIGHT"]);
+    else if (this->player.getDir()[1] == DOWN)
+        playerShape.setTexture(&this->textures["PLAYER_SHEET_DOWN"]);
+    else if (this->player.getDir()[1] == UP)
+        playerShape.setTexture(&this->textures["PLAYER_SHEET_UP"]);
+    else if (this->player.getDir()[1] == NONE)
+        playerShape.setTexture(&this->textures["PLAYER_SHEET_DOWN"]);
+
+    this->player.setShape(playerShape);
+
+    //Init enemies
+    for (auto &e : this->enemies){
+        sf::RectangleShape enemyShape = e.getShape();
+        if (e.getDir() == LEFT)
+            enemyShape.setTexture(&this->textures["ENEMY_SHEET_LEFT"]);
+        else if (e.getDir() == RIGHT)
+            enemyShape.setTexture(&this->textures["ENEMY_SHEET_RIGHT"]);
+        else if (e.getDir() == DOWN)
+            enemyShape.setTexture(&this->textures["ENEMY_SHEET_DOWN"]);
+        else if (e.getDir() == UP)
+            enemyShape.setTexture(&this->textures["ENEMY_SHEET_UP"]);
+
+        e.setShape(enemyShape);
+    }
+
+    //Init coins
+    for (auto &c : this->coins){
+        sf::RectangleShape coinShape = c.getShape();
+        coinShape.setTexture(&this->textures["COINS_SHEET"]);
+        c.setShape(coinShape);
+    }
+}
+
 void Game::update(){
     /*
         @return void
@@ -270,6 +317,7 @@ void Game::update(){
 
             this->player.update(this->window);
             this->player.updateCollision(this->map.getCollisionTiles());
+            this->updateTextures();
 
             for(auto &c : this->coins){
                 c.update();
