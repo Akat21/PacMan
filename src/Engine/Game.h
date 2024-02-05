@@ -10,11 +10,11 @@
 #include <SFML/Window.hpp>
 #include <SFML/System.hpp>
 
-#include "Menu.h"
-#include "Player.h"
-#include "Map.h"
-#include "Enemy.h"
-#include "Coins.h"
+#include "../Menu/Menu.h"
+#include "../GameObjects/Player.h"
+#include "../GameObjects/Map.h"
+#include "../GameObjects/Enemy.h"
+#include "../GameObjects/Coins.h"
 
 /*
     Game engine class

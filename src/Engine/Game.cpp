@@ -126,7 +126,7 @@ void Game::saveGame(){
         Saves the game
     */
 
-    std::ofstream ofs("save.txt", std::ios::trunc);
+    std::ofstream ofs("src/save.txt", std::ios::trunc);
 
     ofs << this->points << std::endl;
 
@@ -140,7 +140,7 @@ void Game::loadGame(){
         Loads the game
     */
 
-    std::ifstream ifs("save.txt");
+    std::ifstream ifs("src/save.txt");
 
     if(ifs.is_open()){
         ifs >> this->points;

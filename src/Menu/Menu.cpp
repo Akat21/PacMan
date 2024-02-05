@@ -72,7 +72,7 @@ void Menu::initText(){
 
 void Menu::checkFile(){
     std::ifstream inFile;
-    if (std::ifstream inFile("save.txt"); inFile) {
+    if (std::ifstream inFile("src/save.txt"); inFile) {
         this->isFile = true;
     }
 }
