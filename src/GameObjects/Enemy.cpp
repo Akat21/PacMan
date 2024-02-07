@@ -1,7 +1,24 @@
 #include "Enemy.h"
+#include "../Engine/TextureManager.h"
+
+//Constructors and Destructors
+Enemy::Enemy(){
+    this->initVariables();
+    this->initShape();
+}
+
+Enemy::~Enemy(){
+
+}
 
 //Private Functions
 void Enemy::initVariables(){
+    /*
+        @ return void
+
+        Initializes the starting variables
+    */
+
     this->dir = NONE;
     randomDirection();
 }
@@ -17,6 +34,7 @@ void Enemy::initShape(){
     this->shape.setSize(sf::Vector2f(18.f, 18.f));
     this->shape.setPosition(400.f, 330.f);
 
+    //Randomizes the color of the enemy
     sf::Color color(rand() % 255 + 1, rand() % 255 + 1, rand() % 255 + 1);
     this->shape.setFillColor(color);
 }
@@ -28,11 +46,13 @@ void Enemy::randomDirection(){
         Randomizes the direction of the enemy
     */
    
+    //Randomize direction after collision
     int random;
     if (this->dir == NONE) random = rand() % 4 + 1;
     if (this->dir == LEFT || this->dir == RIGHT) random = rand() % 2 + 3;
     if (this->dir == UP || this->dir == DOWN) random = rand() % 2 + 1;
 
+    //Set enemy move direction
     switch(random){
         case 1:
             this->dir = LEFT;
@@ -55,24 +75,6 @@ void Enemy::randomDirection(){
 //Getters and Setters
 sf::RectangleShape Enemy::getShape() const{
     return this->shape;
-}
-
-Direction Enemy::getDir() const{
-    return this->dir;
-}
-
-void Enemy::setShape(sf::RectangleShape shape){
-    this->shape = shape;
-}
-
-//Constructors and Destructors
-Enemy::Enemy(){
-    this->initVariables();
-    this->initShape();
-}
-
-Enemy::~Enemy(){
-
 }
 
 //Functions
@@ -142,11 +144,42 @@ void Enemy::updateCollision(std::vector<std::vector<sf::RectangleShape>> collisi
     }
 }
 
-void Enemy::update(){
+void Enemy::updateTextures(){
+    /*
+        @ return void
+
+        Updates the textures of the enemy
+    */
+
+    if (this->dir == LEFT)
+        this->shape.setTexture(&TextureManager::getTexture("Textures/rosekane_21.png"));
+    else if (this->dir == RIGHT)
+        this->shape.setTexture(&TextureManager::getTexture("Textures/rosekane_22.png"));
+    else if (this->dir == DOWN)
+        this->shape.setTexture(&TextureManager::getTexture("Textures/rosekane_23.png"));
+    else if (this->dir == UP)
+        this->shape.setTexture(&TextureManager::getTexture("Textures/rosekane_24.png"));
+
+}
+
+void Enemy::update(std::vector<std::vector<sf::RectangleShape>> collisionTiles){
+    /*
+        @ return void
+
+        Updates the enemy
+    */
+
     this->updateMovement();
+    this->updateCollision(collisionTiles);
+    this->updateTextures();
 }
 
 void Enemy::render(sf::RenderTarget* target){
-    //Draws the enemy
+    /*
+        @ return void
+
+        Renders the enemy
+    */
+
     target->draw(this->shape);
 }

@@ -11,6 +11,8 @@ class Enemy{
     private:
         //Enemy Shape
         sf::RectangleShape shape;
+
+        //Enemy Logic
         Direction dir;
         sf::Vector2f movementSpeed;
 
@@ -22,17 +24,16 @@ class Enemy{
     public:
         //Getters and Setters
         sf::RectangleShape getShape() const;
-        Direction getDir() const;
-        void setShape(sf::RectangleShape shape);
         
         //Constructors and Destructors
         Enemy();
         virtual ~Enemy();
         
         //Functions
-        void update();
+        void update(std::vector<std::vector<sf::RectangleShape>> collisionTiles);
         void updateMovement();  
         void updateCollision(std::vector<std::vector<sf::RectangleShape>> collisionTiles);
+        void updateTextures();
         void render(sf::RenderTarget* target);
 };
 

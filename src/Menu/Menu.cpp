@@ -2,6 +2,12 @@
 
 //Private Functions
 void Menu::initVariables(){
+    /*
+        @return void
+
+        Inits starting variables
+    */
+
     this->startGame = false;
     this->loadGame = false;
     this->choice = 1;
@@ -12,12 +18,24 @@ void Menu::initVariables(){
 }
 
 void Menu::initFont(){
+    /*
+        @return void
+
+        Inits the font
+    */
+
     if (!this->font.loadFromFile("Fonts/advanced_pixel-7.ttf")){
         std::cout << "ERROR::MAINMENUSTATE::COULD NOT LOAD FONT" << std::endl;
     }
 }
 
 void Menu::initText(){
+    /*
+        @return void
+
+        Inits the text objects, assign font, size, position, color and string
+    */
+
     //Init start text
     this->startText.setFont(this->font);
     this->startText.setCharacterSize(60);
@@ -66,11 +84,14 @@ void Menu::initText(){
     this->hardText.setPosition(40.f, 600.f);
     this->hardText.setFillColor(sf::Color::White);
     this->hardText.setString("HARD");
-
-
 }
 
 void Menu::checkFile(){
+    /*
+        @return void
+
+        Checks if the file exists and set isFile to true if it does
+    */
     std::ifstream inFile;
     if (std::ifstream inFile("src/save.txt"); inFile) {
         this->isFile = true;
@@ -103,13 +124,29 @@ difficulty Menu::getDifficultyLevel() const{
 
 //Functions
 void Menu::update(sf::RenderWindow* target){
+    /*
+        @return void
+
+        Listens for events and updates the menu based on the events (key presses)
+    */
+
     this->checkFile();
 
     //Event polling
     while(target->pollEvent(this->ev)){
         switch(this->ev.type){
+
+            //check if window is closed
+            case sf::Event::Closed:
+                target->close();
+                break;
+
+            //check if key is released
             case sf::Event::KeyReleased:
+                
+                //Up Key Handling
                 if(this->ev.key.code == sf::Keyboard::Up){
+
                     //Choose menu option
                     if (difficultyMenu == false){
                         if(this->choice == 1){
@@ -120,7 +157,7 @@ void Menu::update(sf::RenderWindow* target){
                         }
                     }
 
-                    //Choose difficulty
+                    //Choose difficulty option
                     if(this->difficultyMenu == true){
                         if(this->difficultyChoice == 1){
                             this->difficultyChoice = 3;
@@ -129,8 +166,12 @@ void Menu::update(sf::RenderWindow* target){
                             this->difficultyChoice--;
                         }
                     }
+
                 }
+
+                //Down Key Handling
                 if(this->ev.key.code == sf::Keyboard::Down){
+
                     //Choose menu option
                     if (difficultyMenu == false){
                         if (this->choice == 4){
@@ -151,38 +192,55 @@ void Menu::update(sf::RenderWindow* target){
                         }
                     }
                 }
+
+                //Enter Key Handling
                 if(this->ev.key.code == sf::Keyboard::Enter){
-                    //Choose menu option
+                    
+                    //Handle menu choices
                     if (difficultyMenu == false){
+
+                        //Start game choice handling
                         if(this->choice == 1){
                             this->startGame = true;
                         }
+
+                        //Load game choice handling
                         if(this->choice == 2){
                             if(this->isFile == true){
                                 this->loadGame = true;
                                 this->startGame = true;
                             }
                         }
+
+                        //Difficulty choice handling
                         if(this->choice == 3){
                             this->difficultyMenu = true;
                         }
+
+                        //Exit choice handling
                         if(this->choice == 4){
                             target->close();
                         }
                     }
 
-                    //Choose difficulty
+                    //Handle difficulty menu choices 
                     else if(this->difficultyMenu == true){
+
+                        //Set difficuly to Easy
                         if(this->difficultyChoice == 1){
                             this->diff = EASY;
                             this->difficultyText.setString("EASY");
                             this->difficultyMenu = false;  
                         }
+
+                        //Set difficuly to Medium
                         if(this->difficultyChoice == 2){
                             this->diff = MEDIUM;
                             this->difficultyText.setString("MEDIUM");
                             this->difficultyMenu = false;  
                         }
+
+                        //Set difficuly to Hard
                         if(this->difficultyChoice == 3){
                             this->diff = HARD;
                             this->difficultyText.setString("HARD");
@@ -196,7 +254,7 @@ void Menu::update(sf::RenderWindow* target){
         }
     }
     
-    //Menu
+    //Menu text color change (highlighting the chosen option)
     if (this->choice == 1){
         this->startText.setFillColor(sf::Color::Red);
         if(this->isFile) this->loadText.setFillColor(sf::Color::White); else this->loadText.setFillColor(sf::Color(150, 150, 150));
@@ -222,7 +280,7 @@ void Menu::update(sf::RenderWindow* target){
         this->exitText.setFillColor(sf::Color::Red);
     }
 
-    //Difficulty menu
+    //Difficulty text color change (highlighting the chosen option)
     if (this->difficultyChoice == 1){
         this->easyText.setFillColor(sf::Color::Red);
         this->mediumText.setFillColor(sf::Color::White);
@@ -241,6 +299,12 @@ void Menu::update(sf::RenderWindow* target){
 }
 
 void Menu::render(sf::RenderTarget* target){
+    /*
+        @return void
+
+        Renders the menu to the screen
+    */
+   
     if (this->difficultyMenu == true){
         target->draw(this->easyText);
         target->draw(this->mediumText);

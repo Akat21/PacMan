@@ -1,28 +1,5 @@
 #include "Player.h"
-
-//Private Functions
-void Player::initVariables(){
-    for(size_t i = 0; i < 2; i++) this->dir.push_back(NONE);
-}
-
-void Player::initShape(){
-    this->shape.setFillColor(sf::Color::Blue);
-    this->shape.setSize(sf::Vector2f(20.f, 20.f));
-    this->shape.setPosition(20.f, 20.f);
-}
-
-//Getters and Setters
-sf::RectangleShape Player::getShape() const{
-    return this->shape;
-}
-
-std::vector<Direction> Player::getDir() const{
-    return this->dir;
-}
-
-void Player::setShape(sf::RectangleShape shape){
-    this->shape = shape;
-}
+#include "../Engine/TextureManager.h"
 
 //Constructors and Destructors
 Player::Player(float x, float y){
@@ -41,8 +18,37 @@ Player::~Player(){
 
 }
 
+//Private Functions
+void Player::initVariables(){
+    /*
+        @ return void
+
+        Initializes the starting variables
+    */
+
+    for(size_t i = 0; i < 2; i++) this->dir.push_back(NONE);
+}
+
+void Player::initShape(){
+    /*
+        @ return void
+
+        Initializes the shape of the player
+    */
+
+    this->shape.setFillColor(sf::Color::Blue);
+    this->shape.setSize(sf::Vector2f(20.f, 20.f));
+    this->shape.setPosition(20.f, 20.f);
+}
+
+//Getters and Setters
+sf::RectangleShape Player::getShape() const{
+    return this->shape;
+}
+
+
 //Functions
-void Player::updateDirection(sf::RenderWindow* target){
+void Player::updateDirection(){
     /*
         @ return void
 
@@ -137,16 +143,45 @@ void Player::updateCollision(std::vector<std::vector<sf::RectangleShape>> map){
     }
 }
 
-//Functions
-void Player::update(sf::RenderWindow* target){
+void Player::updateTexture(){
+    /*
+        @ return void
 
-    //Update position of the player
-    this->updateDirection(target);
+        Updates the texture of the player
+    */
+
+    if (this->dir[1] == LEFT)
+        shape.setTexture(&TextureManager::getTexture("Textures/rosekane_55.png"));
+    else if (this->dir[1] == RIGHT)
+        shape.setTexture(&TextureManager::getTexture("Textures/rosekane_71.png"));
+    else if (this->dir[1] == DOWN)
+        shape.setTexture(&TextureManager::getTexture("Textures/rosekane_85.png"));
+    else if (this->dir[1] == UP)
+        shape.setTexture(&TextureManager::getTexture("Textures/rosekane_103.png"));
+    else if (this->dir[1] == NONE)
+        shape.setTexture(&TextureManager::getTexture("Textures/rosekane_85.png"));
+}
+
+//Functions
+void Player::update(std::vector<std::vector<sf::RectangleShape>> map){
+    /*
+        @ return void
+
+        Updates the player position
+    */
+
+    this->updateDirection();
     this->updateMovement();
+    this->updateCollision(map);
+    this->updateTexture();
 }
 
 void Player::render(sf::RenderTarget* target){
+    /*
+        @ return void
 
-    //Render player
+        Renders the player
+    */
+
     target->draw(this->shape);
 }

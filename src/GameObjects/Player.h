@@ -37,12 +37,11 @@ class Player{
 
         //Getters and Setters
         sf::RectangleShape getShape() const;
-        std::vector<Direction> getDir() const;
-        void setShape(sf::RectangleShape shape);
 
         //Functions
-        void update(sf::RenderWindow* target);
-        void updateDirection(sf::RenderWindow* target);
+        void update(std::vector<std::vector<sf::RectangleShape>> map);
+        void updateTexture();
+        void updateDirection();
         void updateMovement();
         void updateCollision(std::vector<std::vector<sf::RectangleShape>> collisionTiles);
         void render(sf::RenderTarget* target);

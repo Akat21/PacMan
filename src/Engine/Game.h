@@ -71,7 +71,7 @@ class Game{
         void initFonts();
         void initText();
         void initWindow();
-        void initTextures();
+        void initObjects();
 
     //Constructors and Destructors
     public:
@@ -89,7 +89,6 @@ class Game{
 
     void updateEnemies();
     void updateCollision();
-    void updateTextures();
     void updateMousePositions();
     void UpdateGUI();
     void updateDifficulty();

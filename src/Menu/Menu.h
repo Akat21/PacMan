@@ -53,8 +53,6 @@ class Menu{
         Menu();
         virtual ~Menu();
 
-        //Getters and Setters
-
         //Functions
         void update(sf::RenderWindow* target);
         void render(sf::RenderTarget* target);

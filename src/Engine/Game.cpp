@@ -7,16 +7,21 @@ Game::Game(){
     this->initWindow();
     this->initFonts();
     this->initText();
-    this->initTextures();
+    this->initObjects();
 }
 
 Game::~Game(){
     delete this->window;
 }
 
-
 //Private Functions
 void Game::initVariables(){
+    /*
+        @return void
+
+        Initializes the starting variables
+    */
+
     this->window = nullptr;
 
     //Game logic
@@ -26,10 +31,15 @@ void Game::initVariables(){
     this->points = 0;
     this->maxEnemies = 5;
     this->coinsTiles = static_cast<std::vector<std::vector<sf::RectangleShape>>>(this->map.getCoinsTiles());
-
 }
 
 void Game::initWindow(){
+    /*
+        @return void
+
+        Initializes the window
+    */
+
     //Set window resolution
     this->videoMode.width = 800;
     this->videoMode.height = 800;
@@ -47,12 +57,24 @@ void Game::initWindow(){
 }
 
 void Game::initFonts(){
+    /*
+        @return void
+
+        Initializes the fonts
+    */
+
     if(!this->font.loadFromFile("Fonts/advanced_pixel-7.ttf")){
         std::cout << "ERROR::GAME::INITFONTS::Failed to load font" << std::endl;
     }
 }
 
 void Game::initText(){
+    /*
+        @return void
+
+        Initializes the text
+    */
+
     //Init score text
     this->score.setFont(this->font);
     this->score.setCharacterSize(50);
@@ -68,19 +90,23 @@ void Game::initText(){
     this->helpText.setString("Press F1 to unpause\n\nCollect Coins to \nget points\nAvoid the ghosts\n\nPress ESC to exit");
 }
 
-void Game::initTextures(){
-    //Init textures
-    this->textures["PLAYER_SHEET_LEFT"].loadFromFile("Textures/rosekane_55.png");
-    this->textures["PLAYER_SHEET_RIGHT"].loadFromFile("Textures/rosekane_71.png");
-    this->textures["PLAYER_SHEET_DOWN"].loadFromFile("Textures/rosekane_85.png");
-    this->textures["PLAYER_SHEET_UP"].loadFromFile("Textures/rosekane_103.png");
+void Game::initObjects(){
+    /*
+        @return void
 
-    this->textures["ENEMY_SHEET_RIGHT"].loadFromFile("Textures/rosekane_22.png");
-    this->textures["ENEMY_SHEET_LEFT"].loadFromFile("Textures/rosekane_21.png");
-    this->textures["ENEMY_SHEET_DOWN"].loadFromFile("Textures/rosekane_23.png");
-    this->textures["ENEMY_SHEET_UP"].loadFromFile("Textures/rosekane_24.png");
+        Initializes the game objects
+    */
 
-    this->textures["COINS_SHEET"].loadFromFile("Textures/rosekane_0.png");
+    //Enemy spawning
+    for (int i = 0; i < this->maxEnemies; i++) this->enemies.push_back(Enemy());
+    
+    //Coins spawning
+    for(size_t i = 0; i < this->coinsTiles.size(); i++){
+        for(size_t j = 0; j < this->coinsTiles[i].size(); j++){
+            this->coins.push_back(Coins(this->coinsTiles[i][j].getPosition().x, this->coinsTiles[i][j].getPosition().y));
+        }
+    }
+
 }
 
 //Getters and Setters
@@ -167,23 +193,14 @@ void Game::updateEnemies(){
         Spawn enemies when the enemies amount on screen is smaller than the maxEnemies
     */ 
 
-    //Enemy spawning
-    if(this->enemies.size() < this->maxEnemies){
-        this->enemies.push_back(Enemy());
-    }
-
-    //Coins spawning
-    for(size_t i = 0; i < this->coinsTiles.size(); i++){
-        for(size_t j = 0; j < this->coinsTiles[i].size(); j++){
-            this->coins.push_back(Coins(this->coinsTiles[i][j].getPosition().x, this->coinsTiles[i][j].getPosition().y));
-            coinsTiles[i].erase(coinsTiles[i].begin() + j);
-        }
-    }
-
-    //Update all enemies
+    //Update enemies
     for (auto &e : this->enemies){
-        e.update();
-        e.updateCollision(this->map.getCollisionTiles());
+        e.update(this->map.getCollisionTiles());
+    }
+
+    //Update coins
+    for(auto &c : this->coins){
+        c.update();
     }
 }
 
@@ -241,51 +258,6 @@ void Game::updateDifficulty(){
     }
 }
 
-void Game::updateTextures(){
-    /*
-        @return void
-
-        Updates the textures of the game objects
-    */
-
-    //Init player
-    sf::RectangleShape playerShape = this->player.getShape();
-    if (this->player.getDir()[1] == LEFT)
-        playerShape.setTexture(&this->textures["PLAYER_SHEET_LEFT"]);
-    else if (this->player.getDir()[1] == RIGHT)
-        playerShape.setTexture(&this->textures["PLAYER_SHEET_RIGHT"]);
-    else if (this->player.getDir()[1] == DOWN)
-        playerShape.setTexture(&this->textures["PLAYER_SHEET_DOWN"]);
-    else if (this->player.getDir()[1] == UP)
-        playerShape.setTexture(&this->textures["PLAYER_SHEET_UP"]);
-    else if (this->player.getDir()[1] == NONE)
-        playerShape.setTexture(&this->textures["PLAYER_SHEET_DOWN"]);
-
-    this->player.setShape(playerShape);
-
-    //Init enemies
-    for (auto &e : this->enemies){
-        sf::RectangleShape enemyShape = e.getShape();
-        if (e.getDir() == LEFT)
-            enemyShape.setTexture(&this->textures["ENEMY_SHEET_LEFT"]);
-        else if (e.getDir() == RIGHT)
-            enemyShape.setTexture(&this->textures["ENEMY_SHEET_RIGHT"]);
-        else if (e.getDir() == DOWN)
-            enemyShape.setTexture(&this->textures["ENEMY_SHEET_DOWN"]);
-        else if (e.getDir() == UP)
-            enemyShape.setTexture(&this->textures["ENEMY_SHEET_UP"]);
-
-        e.setShape(enemyShape);
-    }
-
-    //Init coins
-    for (auto &c : this->coins){
-        sf::RectangleShape coinShape = c.getShape();
-        coinShape.setTexture(&this->textures["COINS_SHEET"]);
-        c.setShape(coinShape);
-    }
-}
-
 void Game::update(){
     /*
         @return void
@@ -315,13 +287,7 @@ void Game::update(){
 
             this->updateDifficulty();
 
-            this->player.update(this->window);
-            this->player.updateCollision(this->map.getCollisionTiles());
-            this->updateTextures();
-
-            for(auto &c : this->coins){
-                c.update();
-            }
+            this->player.update(this->map.getCollisionTiles());
             
             this->updateCollision();
 
