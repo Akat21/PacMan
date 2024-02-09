@@ -39,7 +39,6 @@ void Player::initShape(){
 
     this->shape.setFillColor(sf::Color::Blue);
     this->shape.setSize(sf::Vector2f(20.f, 20.f));
-    this->shape.setPosition(20.f, 20.f);
 }
 
 //Getters and Setters

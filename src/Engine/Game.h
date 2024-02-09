@@ -37,7 +37,9 @@ class Game{
         std::vector<std::vector<sf::RectangleShape>> coinsTiles;
 
         //Player
-        Player player;
+        Player *player;
+        float playerX;
+        float playerY;
 
         //Enemies
         std::vector<Enemy> enemies;

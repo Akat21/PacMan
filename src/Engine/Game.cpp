@@ -7,6 +7,7 @@ Game::Game(){
     this->initWindow();
     this->initFonts();
     this->initText();
+    this->player = new Player(this->playerX, this->playerY);
 }
 
 Game::~Game(){
@@ -24,6 +25,8 @@ void Game::initVariables(){
     this->window = nullptr;
 
     //Game logic
+    this->playerX = 20.f;
+    this->playerY = 20.f;
     this->pause = false;
     this->endGame = false;
     this->load = false;
@@ -97,6 +100,8 @@ void Game::initObjects(){
         Initializes the game objects
     */
 
+    this->player = new Player(this->playerX, this->playerY);
+
     //Enemy spawning
     for (int i = 0; i < this->maxEnemies; i++) this->enemies.push_back(Enemy());
     
@@ -154,7 +159,7 @@ void Game::saveGame(){
 
     std::ofstream ofs("src/save.txt", std::ios::trunc);
 
-    ofs << this->points << std::endl;
+    ofs << this->points << " " << this->player->getShape().getPosition().x << " " << this->player->getShape().getPosition().y << std::endl;
     for (auto &row : this->stringMap){
         for (auto &col : row){
             ofs << col;
@@ -174,7 +179,16 @@ void Game::loadGame(){
     std::ifstream ifs("src/save.txt");
 
     if(ifs.is_open()){
-        ifs >> this->points;
+
+        std::string firstLine;
+        if (std::getline(ifs, firstLine)) {
+            std::istringstream iss(firstLine);
+            if (!(iss >> this->points >> this->playerX >> this->playerY)) {
+                std::cerr << "Error parsing line: " << firstLine << std::endl;
+            }
+        } else {
+            std::cerr << "File is empty" << std::endl;
+        }
 
         // Read map data
         this->stringMap.clear(); // Clear existing data
@@ -185,12 +199,6 @@ void Game::loadGame(){
 
         // Read the file line by line
         while (std::getline(ifs, line)) {
-            // Skip the first line
-            if (isFirstLine) {
-                isFirstLine = false;
-                continue;
-            }
-
             std::vector<std::string> row;
             for (char c : line) {
                 row.push_back(std::string(1, c)); // Convert char to string and push into row
@@ -261,13 +269,13 @@ void Game::updateCollision(){
     */
 
     for (auto &e : this->enemies){
-        if (this->player.getShape().getGlobalBounds().intersects(e.getShape().getGlobalBounds())){
+        if (this->player->getShape().getGlobalBounds().intersects(e.getShape().getGlobalBounds())){
             this->endGame = true;
         }
     }
 
     for (auto &c : this->coins){
-        if (this->player.getShape().getGlobalBounds().intersects(c.getShape().getGlobalBounds())){
+        if (this->player->getShape().getGlobalBounds().intersects(c.getShape().getGlobalBounds())){
             this->stringMap[static_cast<int>(c.getShape().getPosition().y / 20)][static_cast<int>(c.getShape().getPosition().x / 20)] = ' ';
             this->points += 10;
             c.setCollected(true);
@@ -340,7 +348,7 @@ void Game::update(){
             
             this->updateCollision();
 
-            this->player.update(this->map.getCollisionTiles());
+            this->player->update(this->map.getCollisionTiles());
 
             this->updateEnemies();
 
@@ -398,7 +406,7 @@ void Game::render(){
     else if (this->menu.getStartGame() == true){
         //Render game objects
         this->map.render(this->window);
-        this->player.render(this->window);
+        this->player->render(this->window);
         this->renderEnemies();
 
         //Render pause
