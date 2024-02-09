@@ -41,7 +41,7 @@ void Game::initWindow(){
     */
 
     //Set window resolution
-    this->videoMode.width = 800;
+    this->videoMode.width = 780;
     this->videoMode.height = 800;
 
     //Create window
@@ -286,10 +286,10 @@ void Game::update(){
             this->updateMousePositions();
 
             this->updateDifficulty();
-
-            this->player.update(this->map.getCollisionTiles());
             
             this->updateCollision();
+
+            this->player.update(this->map.getCollisionTiles());
 
             this->updateEnemies();
 

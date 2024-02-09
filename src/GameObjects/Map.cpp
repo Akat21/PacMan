@@ -1,4 +1,5 @@
 #include "Map.h"
+#include "../Engine/TextureManager.h"
 
 //Constructors and Destructors
 Map::Map(){
@@ -97,23 +98,73 @@ void Map::createTiles(){
         for(size_t x = 0; x < this->map[y].size(); x++){
 
             //Check if the tile is a wall or floor tile (66 = B)
-            if(this->map[y][x] == 66){
-                tile.setFillColor(sf::Color::Green); //Wall
-                tile.setPosition(x * 20.f, y * 20.f);
-                this->textures["MAP_WALL"].loadFromFile("Textures/rosekane_196.png");
+            if(this->map[y][x] >= 65 && this->map[y][x] <= 80 && this->map[y][x] != 67){
 
-                tile.setTexture(&this->textures["MAP_WALL"]);
+                //Set correct texture
+                if (this->map[y][x] == 66){
+                    tile.setFillColor(sf::Color::Green); 
+                    tile.setTexture(&TextureManager::getTexture("Textures/rosekane_196.png"));
+                } else if(this->map[y][x] == 65){
+                    tile.setFillColor(sf::Color::Blue); 
+                    tile.setTexture(&TextureManager::getTexture("Textures/rosekane_227.png"));
+                } else if(this->map[y][x] == 68){
+                    tile.setFillColor(sf::Color::Blue); 
+                    tile.setTexture(&TextureManager::getTexture("Textures/rosekane_176.png"));
+                } else if(this->map[y][x] == 69){
+                    tile.setFillColor(sf::Color::Blue); 
+                    tile.setTexture(&TextureManager::getTexture("Textures/rosekane_228.png"));
+                } else if(this->map[y][x] == 70){
+                    tile.setFillColor(sf::Color::Blue); 
+                    tile.setTexture(&TextureManager::getTexture("Textures/rosekane_212.png"));
+                } else if(this->map[y][x] == 71){
+                    tile.setFillColor(sf::Color::Blue); 
+                    tile.setTexture(&TextureManager::getTexture("Textures/rosekane_178.png"));
+                } else if(this->map[y][x] == 72){
+                    tile.setFillColor(sf::Color::Blue); 
+                    tile.setTexture(&TextureManager::getTexture("Textures/rosekane_210.png"));
+                } else if(this->map[y][x] == 73){
+                    tile.setFillColor(sf::Color::Blue); 
+                    tile.setTexture(&TextureManager::getTexture("Textures/rosekane_231.png"));
+                } else if(this->map[y][x] == 74){
+                    tile.setFillColor(sf::Color::Blue); 
+                    tile.setTexture(&TextureManager::getTexture("Textures/rosekane_193.png"));
+                } else if(this->map[y][x] == 75){
+                    tile.setFillColor(sf::Color::Blue); 
+                    tile.setTexture(&TextureManager::getTexture("Textures/rosekane_213.png"));
+                } else if(this->map[y][x] == 76){
+                    tile.setFillColor(sf::Color::Blue); 
+                    tile.setTexture(&TextureManager::getTexture("Textures/rosekane_177.png"));
+                } else if(this->map[y][x] == 77){
+                    tile.setFillColor(sf::Color::Blue); 
+                    tile.setTexture(&TextureManager::getTexture("Textures/rosekane_195.png"));
+                } else if(this->map[y][x] == 78){
+                    tile.setFillColor(sf::Color::Blue); 
+                    tile.setTexture(&TextureManager::getTexture("Textures/rosekane_230.png"));
+                } else if(this->map[y][x] == 79){
+                    tile.setFillColor(sf::Color::Blue); 
+                    tile.setTexture(&TextureManager::getTexture("Textures/rosekane_211.png"));
+                } else if(this->map[y][x] == 80){
+                    tile.setFillColor(sf::Color::Blue); 
+                    tile.setTexture(&TextureManager::getTexture("Textures/rosekane_229.png"));
+                }
+
+                //Set position of tile and push it to collisionRow
+                tile.setPosition(x * 20.f, y * 20.f);
                 collisionRow.push_back(tile);
-            }
-            else if(this->map[y][x] == 67){
+
+            } else if(this->map[y][x] == 67){
+
+                //Set position of tile and push it to coinsRow
                 tile.setFillColor(sf::Color::Black);
                 tile.setPosition(x * 20.f, y * 20.f);
                 coinsRow.push_back(tile);
-            }
-            else{
+
+            } else{
                 tile.setFillColor(sf::Color::Black); //Floor
                 tile.setPosition(x * 20.f, y * 20.f);
             }
+
+            //Push tile to tilesRow
             tilesRow.push_back(tile);
         }
 
@@ -135,7 +186,7 @@ void Map::render(sf::RenderTarget* target){
 
         Renders the map
     */
-   
+
     for(auto row : this->tilesMap){
         for(auto block : row){
             target->draw(block);

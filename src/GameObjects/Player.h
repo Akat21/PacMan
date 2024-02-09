@@ -19,9 +19,13 @@ class Player{
     private:
         //Player Shape
         sf::RectangleShape shape;
+        sf::RectangleShape checkRect;
 
         //Movement
-        std::vector<Direction> dir;
+        Direction dir;
+        Direction dirX;
+        Direction dirY;
+        Direction preDir;
         sf::Vector2f movementSpeed;
         sf::Event ev;
 
@@ -39,10 +43,11 @@ class Player{
         sf::RectangleShape getShape() const;
 
         //Functions
+        void checkRectCreate();
         void update(std::vector<std::vector<sf::RectangleShape>> map);
         void updateTexture();
-        void updateDirection();
-        void updateMovement();
+        void updateDirection(std::vector<std::vector<sf::RectangleShape>> map);
+        void updateMovement(std::vector<std::vector<sf::RectangleShape>> map);
         void updateCollision(std::vector<std::vector<sf::RectangleShape>> collisionTiles);
         void render(sf::RenderTarget* target);
 };
