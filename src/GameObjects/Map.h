@@ -14,6 +14,7 @@ class Map{
     private:
         //Map init
         std::vector<std::vector<int>> map;
+        std::vector<std::vector<std::string>> mapString;
         std::vector<std::vector<sf::RectangleShape>> tilesMap;
         std::vector<std::vector<sf::RectangleShape>> collisionTiles;
         std::vector<std::vector<sf::RectangleShape>> coinsTiles;
@@ -29,6 +30,7 @@ class Map{
         virtual ~Map();
 
         //Getters and Setters
+        std::vector<std::vector<std::string>> getMapString() const;
         std::vector<std::vector<sf::RectangleShape>> getCollisionTiles() const;
         std::vector<std::vector<sf::RectangleShape>> getCoinsTiles() const;
         void setCollisionTiles(std::vector<std::vector<sf::RectangleShape>> collisionTiles);

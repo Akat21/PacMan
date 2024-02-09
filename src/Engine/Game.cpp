@@ -7,7 +7,6 @@ Game::Game(){
     this->initWindow();
     this->initFonts();
     this->initText();
-    this->initObjects();
 }
 
 Game::~Game(){
@@ -30,6 +29,7 @@ void Game::initVariables(){
     this->load = false;
     this->points = 0;
     this->maxEnemies = 5;
+    this->stringMap = static_cast<std::vector<std::vector<std::string>>>(this->map.getMapString());
     this->coinsTiles = static_cast<std::vector<std::vector<sf::RectangleShape>>>(this->map.getCoinsTiles());
 }
 
@@ -155,7 +155,12 @@ void Game::saveGame(){
     std::ofstream ofs("src/save.txt", std::ios::trunc);
 
     ofs << this->points << std::endl;
-
+    for (auto &row : this->stringMap){
+        for (auto &col : row){
+            ofs << col;
+        }
+        ofs << std::endl;
+    }
     ofs.close();
 }
 
@@ -170,6 +175,50 @@ void Game::loadGame(){
 
     if(ifs.is_open()){
         ifs >> this->points;
+
+        // Read map data
+        this->stringMap.clear(); // Clear existing data
+
+        bool isFirstLine = true; // Flag to indicate whether it's the first line
+
+        std::string line;
+
+        // Read the file line by line
+        while (std::getline(ifs, line)) {
+            // Skip the first line
+            if (isFirstLine) {
+                isFirstLine = false;
+                continue;
+            }
+
+            std::vector<std::string> row;
+            for (char c : line) {
+                row.push_back(std::string(1, c)); // Convert char to string and push into row
+            }
+            stringMap.push_back(row);
+        }
+
+        this->coinsTiles.clear();
+        sf::RectangleShape tile;
+        tile.setSize(sf::Vector2f(20.f, 20.f));
+        tile.setFillColor(sf::Color::Yellow);
+
+        std::vector<sf::RectangleShape> coinsRow;
+
+        for(size_t y = 0; y < this->stringMap.size(); y++){
+            for(size_t x = 0; x < this->stringMap[y].size(); x++){
+                if (this->stringMap[y][x] == "C"){
+                    tile.setFillColor(sf::Color::Black);
+                    tile.setPosition(x * 20.f, y * 20.f);
+                    coinsRow.push_back(tile);
+                }
+            }
+            this->coinsTiles.push_back(coinsRow);
+            coinsRow.clear();
+        }
+
+        this->initObjects();
+
     }
 
     ifs.close();
@@ -219,6 +268,7 @@ void Game::updateCollision(){
 
     for (auto &c : this->coins){
         if (this->player.getShape().getGlobalBounds().intersects(c.getShape().getGlobalBounds())){
+            this->stringMap[static_cast<int>(c.getShape().getPosition().y / 20)][static_cast<int>(c.getShape().getPosition().x / 20)] = ' ';
             this->points += 10;
             c.setCollected(true);
         }
@@ -272,6 +322,7 @@ void Game::update(){
         //Load game
         if (this->load == false){
             if (this->menu.getLoadGame()) this->loadGame();
+            else this->initObjects();
             this->load = true;
         }
         //Poll events

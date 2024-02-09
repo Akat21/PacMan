@@ -121,7 +121,7 @@ void Player::updateDirection(std::vector<std::vector<sf::RectangleShape>> map){
 
 }
 
-void Player::updateMovement(std::vector<std::vector<sf::RectangleShape>> map){
+void Player::updateMovement(){
     /*
         @ return void
 
@@ -213,7 +213,7 @@ void Player::update(std::vector<std::vector<sf::RectangleShape>> map){
         Updates the player position
     */
     this->updateDirection(map);
-    this->updateMovement(map);
+    this->updateMovement();
     this->updateCollision(map);
     this->updateTexture();
 }
@@ -226,5 +226,5 @@ void Player::render(sf::RenderTarget* target){
     */
 
     target->draw(this->shape);
-    target->draw(this->checkRect);
+    // target->draw(this->checkRect);
 }

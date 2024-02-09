@@ -13,6 +13,10 @@ Map::~Map(){
 }
 
 //Getters and Setters
+std::vector<std::vector<std::string>> Map::getMapString() const{
+    return this->mapString;
+}
+
 std::vector<std::vector<sf::RectangleShape>> Map::getCollisionTiles() const{
     return this->collisionTiles;
 }
@@ -34,6 +38,7 @@ void Map::initVariables(){
     */
 
     this->map.clear();
+    this->mapString.clear();
     this->tilesMap.clear();
     this->collisionTiles.clear();
 }
@@ -59,12 +64,15 @@ void Map::initMap(){
     std::string line;
     while(std::getline(inFile, line)){
         std::vector<int> row;
+        std::vector<std::string> stringRow;
         for(size_t i = 0; i < line.length(); i++){
             char c = line[i];
             int n = static_cast<int>(c);
             row.push_back(n);
+            stringRow.push_back(std::string(1, c));
         }
         this->map.push_back(row);
+        this->mapString.push_back(stringRow);
     }
 
     //Close file

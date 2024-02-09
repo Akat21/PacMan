@@ -23,8 +23,6 @@ class Player{
 
         //Movement
         Direction dir;
-        Direction dirX;
-        Direction dirY;
         Direction preDir;
         sf::Vector2f movementSpeed;
         sf::Event ev;
@@ -47,7 +45,7 @@ class Player{
         void update(std::vector<std::vector<sf::RectangleShape>> map);
         void updateTexture();
         void updateDirection(std::vector<std::vector<sf::RectangleShape>> map);
-        void updateMovement(std::vector<std::vector<sf::RectangleShape>> map);
+        void updateMovement();
         void updateCollision(std::vector<std::vector<sf::RectangleShape>> collisionTiles);
         void render(sf::RenderTarget* target);
 };

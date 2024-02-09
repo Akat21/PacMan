@@ -33,6 +33,7 @@ class Game{
 
         //Map
         Map map;
+        std::vector<std::vector<std::string>> stringMap;
         std::vector<std::vector<sf::RectangleShape>> coinsTiles;
 
         //Player
