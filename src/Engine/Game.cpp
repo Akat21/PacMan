@@ -31,7 +31,6 @@ void Game::initVariables(){
     this->endGame = false;
     this->load = false;
     this->points = 0;
-    this->maxEnemies = 5;
     this->stringMap = static_cast<std::vector<std::vector<std::string>>>(this->map.getMapString());
     this->coinsTiles = static_cast<std::vector<std::vector<sf::RectangleShape>>>(this->map.getCoinsTiles());
     this->menu = new Menu(this->window);
@@ -348,6 +347,7 @@ void Game::update(){
     */
    if(this->menu->getStartGame() == false){
         this->menu->update(this->window); //Update menu
+        this->updateDifficulty();
         this->load = false;
     } else {
  

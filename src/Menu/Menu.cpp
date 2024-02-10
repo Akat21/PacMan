@@ -65,7 +65,7 @@ void Menu::initText(){
     this->startText.setCharacterSize(60);
     this->startText.setPosition(40.f, 400.f);
     this->startText.setFillColor(sf::Color::White);
-    this->startText.setString("START");
+    this->startText.setString("NEW GAME");
 
     //Init load text
     this->loadText.setFont(this->font);
