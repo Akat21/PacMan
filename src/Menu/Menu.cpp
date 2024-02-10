@@ -1,7 +1,8 @@
 #include "Menu.h"
+#include "../Engine/TextureManager.h"
 
 //Private Functions
-void Menu::initVariables(){
+void Menu::initVariables(sf::RenderTarget* target){
     /*
         @return void
 
@@ -15,6 +16,29 @@ void Menu::initVariables(){
     this->difficultyChoice = 1;
     this->difficultyMenu = false;
     this->diff = EASY;
+
+    this->background = sf::Sprite(TextureManager::getTexture("Textures/bg-1.png"));
+    
+    std::vector <sf::Texture*> textures;
+    textures.push_back(&TextureManager::getTexture("Textures/bg-1.png"));
+    textures.push_back(&TextureManager::getTexture("Textures/bg-2.png"));
+    textures.push_back(&TextureManager::getTexture("Textures/bg-3.png"));
+    textures.push_back(&TextureManager::getTexture("Textures/bg-4.png"));
+    textures.push_back(&TextureManager::getTexture("Textures/bg-5.png"));
+    textures.push_back(&TextureManager::getTexture("Textures/bg-6.png"));
+    textures.push_back(&TextureManager::getTexture("Textures/bg-7.png"));
+    textures.push_back(&TextureManager::getTexture("Textures/bg-8.png"));
+    textures.push_back(&TextureManager::getTexture("Textures/bg-9.png"));
+    textures.push_back(&TextureManager::getTexture("Textures/bg-10.png"));
+    textures.push_back(&TextureManager::getTexture("Textures/bg-11.png"));
+    textures.push_back(&TextureManager::getTexture("Textures/bg-12.png"));
+    textures.push_back(&TextureManager::getTexture("Textures/bg-13.png"));
+    textures.push_back(&TextureManager::getTexture("Textures/bg-14.png"));
+    textures.push_back(&TextureManager::getTexture("Textures/bg-15.png"));
+    textures.push_back(&TextureManager::getTexture("Textures/bg-16.png"));
+
+
+    this->animation = new Animator<sf::Sprite>(textures, sf::seconds(0.04), this->background, target);
 }
 
 void Menu::initFont(){
@@ -99,8 +123,8 @@ void Menu::checkFile(){
 }
 
 //Constructors and Destructors
-Menu::Menu(){
-    this->initVariables();
+Menu::Menu(sf::RenderTarget* target){
+    this->initVariables(target);
     this->initFont();
     this->initText();
 }
@@ -114,8 +138,16 @@ bool Menu::getStartGame() const{
     return this->startGame;
 }
 
+void Menu::setStartGame(bool startGame){
+    this->startGame = startGame;
+}
+
 bool Menu::getLoadGame() const{
     return this->loadGame;
+}
+
+void Menu::setLoadGame(bool loadGame){
+    this->loadGame = loadGame;
 }
 
 difficulty Menu::getDifficultyLevel() const{
@@ -130,7 +162,9 @@ void Menu::update(sf::RenderWindow* target){
         Listens for events and updates the menu based on the events (key presses)
     */
 
+
     this->checkFile();
+    if (this->animation != nullptr) this->background = this->animation->update();
 
     //Event polling
     while(target->pollEvent(this->ev)){
@@ -298,13 +332,25 @@ void Menu::update(sf::RenderWindow* target){
     }
 }
 
+void Menu::renderBackground(sf::RenderTarget* target){
+    /*
+        @return void
+
+        Renders the background to the screen
+    */
+
+    target->draw(this->background);
+}
+
 void Menu::render(sf::RenderTarget* target){
     /*
         @return void
 
         Renders the menu to the screen
     */
-   
+
+    this->renderBackground(target);
+
     if (this->difficultyMenu == true){
         target->draw(this->easyText);
         target->draw(this->mediumText);

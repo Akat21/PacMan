@@ -34,6 +34,7 @@ void Game::initVariables(){
     this->maxEnemies = 5;
     this->stringMap = static_cast<std::vector<std::vector<std::string>>>(this->map.getMapString());
     this->coinsTiles = static_cast<std::vector<std::vector<sf::RectangleShape>>>(this->map.getCoinsTiles());
+    this->menu = new Menu(this->window);
 }
 
 void Game::initWindow(){
@@ -140,14 +141,39 @@ void Game::pollEvents(){
             //Close window by pressing ESC
             case sf::Event::KeyPressed:
                 if(this->ev.key.code == sf::Keyboard::Escape){
-                    this->window->close();
                     this->saveGame();
+                    this->deleteObjects();
                 }
                 if(this->ev.key.code == sf::Keyboard::F1)
                     this->pause = !this->pause;
                 break;
         }
     }
+}
+
+void Game::deleteObjects(){
+    /*
+        @return void
+
+        Deletes the game objects
+    */
+
+    this->menu->setStartGame(false);
+    this->menu->setLoadGame(false);
+
+    this->pause = false;
+
+    this->enemies.clear();
+
+    this->coins.clear();
+
+    this->points = 0;
+
+    this->stringMap = static_cast<std::vector<std::vector<std::string>>>(this->map.getMapString());
+    this->coinsTiles = static_cast<std::vector<std::vector<sf::RectangleShape>>>(this->map.getCoinsTiles());
+
+    this->playerX = 20.f;
+    this->playerY = 20.f;
 }
 
 void Game::saveGame(){
@@ -192,8 +218,6 @@ void Game::loadGame(){
 
         // Read map data
         this->stringMap.clear(); // Clear existing data
-
-        bool isFirstLine = true; // Flag to indicate whether it's the first line
 
         std::string line;
 
@@ -305,13 +329,13 @@ void Game::updateDifficulty(){
         Updates the difficulty of the game
     */
 
-    if (this->menu.getDifficultyLevel() == EASY){
+    if (this->menu->getDifficultyLevel() == EASY){
         this->maxEnemies = 5;
     }
-    else if (this->menu.getDifficultyLevel() == MEDIUM){
+    else if (this->menu->getDifficultyLevel() == MEDIUM){
         this->maxEnemies = 10;
     }
-    else if (this->menu.getDifficultyLevel() == HARD){
+    else if (this->menu->getDifficultyLevel() == HARD){
         this->maxEnemies = 15;
     }
 }
@@ -322,14 +346,14 @@ void Game::update(){
 
         Updates the game logic
     */
-   if(this->menu.getStartGame() == false){
-        this->menu.update(this->window); //Update menu
+   if(this->menu->getStartGame() == false){
+        this->menu->update(this->window); //Update menu
         this->load = false;
     } else {
  
         //Load game
         if (this->load == false){
-            if (this->menu.getLoadGame()) this->loadGame();
+            if (this->menu->getLoadGame()) this->loadGame();
             else this->initObjects();
             this->load = true;
         }
@@ -339,7 +363,28 @@ void Game::update(){
         //Game update
         if (this->pause == false){
             if(this->endGame == true){
-                this->window->close();
+                sf::Text endText;
+                endText.setFont(this->font);
+                endText.setCharacterSize(100);
+
+                sf::Vector2u windowSize = this->window->getSize();
+                endText.setPosition((windowSize.x - 350.f) / 2, (windowSize.y - 150.f) / 2);
+
+                endText.setFillColor(sf::Color::White);
+                endText.setString("Game Over\n");
+
+                sf::RectangleShape endBox;
+                endBox.setSize(sf::Vector2f(600.f, 200.f));
+                endBox.setFillColor(sf::Color(0, 0, 0, 200));
+                endBox.setPosition((windowSize.x - 600.f) / 2, (windowSize.y - 200.f) / 2);
+
+                this->window->draw(endBox);
+                this->window->draw(endText);
+                this->window->display();
+
+                sf::sleep(sf::milliseconds(2000));
+                this->deleteObjects();
+                this->endGame = false;
             }
 
             this->updateMousePositions();
@@ -399,11 +444,11 @@ void Game::render(){
     this->window->clear(sf::Color::Black); //Clear old frame
 
     //Render menu and game 
-    if (this->menu.getStartGame() == false){
+    if (this->menu->getStartGame() == false){
         //Render menu 
-        this->menu.render(this->window);
+        this->menu->render(this->window);
     }
-    else if (this->menu.getStartGame() == true){
+    else if (this->menu->getStartGame() == true){
         //Render game objects
         this->map.render(this->window);
         this->player->render(this->window);

@@ -21,7 +21,7 @@ Coins::Coins(float x, float y){
     textures.push_back(&TextureManager::getTexture("Textures/rosekane_6.png"));
     textures.push_back(&TextureManager::getTexture("Textures/rosekane_7.png"));
 
-    this->animation = new Animator(textures, sf::seconds(0.1), this->shape);
+    this->animation = new Animator<sf::RectangleShape>(textures, sf::seconds(0.1), this->shape);
 }
 
 Coins::~Coins(){

@@ -15,7 +15,7 @@ class Coins{
         bool collected;
 
         //Coins Animation
-        Animator *animation;
+        Animator<sf::RectangleShape> *animation;
 
         //Private Functions
         void initVariables();

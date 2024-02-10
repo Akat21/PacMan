@@ -29,7 +29,7 @@ class Game{
         sf::Event ev;
 
         //Menu
-        Menu menu;
+        Menu* menu;
 
         //Map
         Map map;
@@ -75,6 +75,7 @@ class Game{
         void initText();
         void initWindow();
         void initObjects();
+        void deleteObjects();
 
     //Constructors and Destructors
     public:

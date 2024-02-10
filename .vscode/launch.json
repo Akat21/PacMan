@@ -8,8 +8,8 @@
       "args": [],
       "stopAtEntry": false,
       "externalConsole": true,
-      "cwd": "c:/Users/sawin/pacman",
-      "program": "c:/Users/sawin/pacman/build/Debug/outDebug",
+      "cwd": "c:/Users/sawin/pacman/src",
+      "program": "c:/Users/sawin/pacman/src/build/Debug/outDebug",
       "MIMode": "gdb",
       "miDebuggerPath": "gdb",
       "setupCommands": [
