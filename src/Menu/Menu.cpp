@@ -117,7 +117,7 @@ void Menu::checkFile(){
         Checks if the file exists and set isFile to true if it does
     */
     std::ifstream inFile;
-    if (std::ifstream inFile("src/save.txt"); inFile) {
+    if (std::ifstream inFile("save.txt"); inFile) {
         this->isFile = true;
     }
 }

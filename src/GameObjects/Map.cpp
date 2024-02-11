@@ -52,7 +52,7 @@ void Map::initMap(){
 
     //Load map from file
     std::ifstream inFile;
-    inFile.open("src/map.txt");
+    inFile.open("map.txt");
     
     //Check if there is no error
     if(inFile.fail()){

@@ -58,6 +58,7 @@ class Game{
         bool endGame;
         int maxEnemies;
         bool load;
+        bool isWin;
 
         //Textures
         std::map<std::string, sf::Texture> textures;
@@ -91,6 +92,7 @@ class Game{
     void saveGame();
     void loadGame();
 
+    void checkWin();
     void updateEnemies();
     void updateCollision();
     void updateMousePositions();

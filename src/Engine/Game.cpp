@@ -49,6 +49,14 @@ void Game::initWindow(){
 
     //Create window
     this->window = new sf::RenderWindow(this->videoMode, "Pac Man", sf::Style::Titlebar | sf::Style::Close);
+    sf::Image icon;
+    if (!icon.loadFromFile("Textures/icon.png")) {
+        std::cout << "ERROR::GAME::INITWINDOW::Failed to load icon" << std::endl;
+    }
+
+    // Set the loaded image as the window icon
+    this->window->setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
+
 
     //Pause box
     this->helpBox.setSize(sf::Vector2f(400.f, 400.f));
@@ -182,7 +190,7 @@ void Game::saveGame(){
         Saves the game
     */
 
-    std::ofstream ofs("src/save.txt", std::ios::trunc);
+    std::ofstream ofs("save.txt", std::ios::trunc);
 
     ofs << this->points << " " << this->player->getShape().getPosition().x << " " << this->player->getShape().getPosition().y << std::endl;
     for (auto &row : this->stringMap){
@@ -201,7 +209,7 @@ void Game::loadGame(){
         Loads the game
     */
 
-    std::ifstream ifs("src/save.txt");
+    std::ifstream ifs("save.txt");
 
     if(ifs.is_open()){
 
@@ -339,6 +347,50 @@ void Game::updateDifficulty(){
     }
 }
 
+void Game::checkWin(){
+    /*
+        @return void
+
+        Checks if the player has won the game
+    */
+
+    bool win = true;
+
+    for (auto &row : this->stringMap){
+        for (auto &col : row){
+            if (col == "C"){
+                win = false;
+                break;
+            }
+        }
+    }
+
+    if (win == true){
+
+        sf::Text endText;
+        endText.setFont(this->font);
+        endText.setCharacterSize(100);
+
+        sf::Vector2u windowSize = this->window->getSize();
+        endText.setPosition((windowSize.x - 350.f) / 2, (windowSize.y - 150.f) / 2);
+
+        endText.setFillColor(sf::Color::White);
+        endText.setString("You Won\n");
+
+        sf::RectangleShape endBox;
+        endBox.setSize(sf::Vector2f(600.f, 200.f));
+        endBox.setFillColor(sf::Color(0, 0, 0, 200));
+        endBox.setPosition((windowSize.x - 600.f) / 2, (windowSize.y - 200.f) / 2);
+
+        this->window->draw(endBox);
+        this->window->draw(endText);
+        this->window->display();
+
+        sf::sleep(sf::milliseconds(2000));
+        this->deleteObjects();
+    }
+}
+
 void Game::update(){
     /*
         @return void
@@ -398,6 +450,7 @@ void Game::update(){
             this->updateEnemies();
 
             this->UpdateGUI();
+
         }
     }
 
@@ -459,6 +512,9 @@ void Game::render(){
 
         //Render GUI
         this->renderGUI(this->window);
+
+        this->checkWin();
+
     }
 
     this->window->display(); //Display new frame
