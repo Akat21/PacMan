@@ -1,6 +1,5 @@
 # Pac Man Game
 
-!Pac Man
 
 This is a classic Pac Man game developed in C++ using the SFML library. It features the iconic Pac Man character navigating through mazes, collecting coins, and avoiding ghosts. The game incorporates object-oriented programming principles and collision detection algorithms to create an engaging gaming experience.
 
