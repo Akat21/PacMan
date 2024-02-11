@@ -1,0 +1,9 @@
+Fonts/
+Textures/
+Coins.o
+Enemy.o
+Game.o
+main.o
+Map.o
+Menu.o
+Player.o
